@@ -44,6 +44,11 @@ def create_item(name):
             return new_item, 201
     return {'message':'Store not found'},404
 
+# Handle 404 error
+@app.errorhandler(404)
+def page_not_found(e):
+    return {'message':'Invalid URL, Page not found'}, 404
+
 
 if __name__ == '__main__':
     app.run(debug=True)
