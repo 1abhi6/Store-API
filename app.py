@@ -44,6 +44,15 @@ def create_item(name):
             return new_item, 201
     return {'message':'Store not found'},404
 
+# Get data of a specific store
+@app.get('/store/<string:name>')
+def get_store(name):
+    for store in stores:
+        if store['name'] == name:
+            return store
+    return {'message':'Store not found'},404
+
+
 # Handle 404 error
 @app.errorhandler(404)
 def page_not_found(e):
