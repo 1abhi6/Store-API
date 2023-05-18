@@ -13,6 +13,7 @@ blp = Blueprint("Items", __name__, description='Operations on items')
 class ItemList(MethodView):
     # Add item
     @blp.arguments(ItemSchema)
+    @blp.response(201, ItemSchema)
     def post(self, item_data):
         for item in items.values():
             if (
@@ -31,15 +32,15 @@ class ItemList(MethodView):
         return item, 201
 
     # Get all items
+    @blp.response(200, ItemSchema(many=True))
     def get(self):
-        return {
-            'items': list(items.values())
-        }
+        return items.values()
 
 
 @blp.route('/item/<string:item_id>')
 class Item(MethodView):
     # Get an item
+    @blp.response(200, ItemSchema)
     def get(self, item_id):
         try:
             return items[item_id]
@@ -48,6 +49,7 @@ class Item(MethodView):
 
     # Update an item with item_id
     @blp.arguments(ItemUpdateSchema)
+    @blp.response(200, ItemSchema)
     def put(self, item_data, item_id):
         try:
             item = items[item_id]
