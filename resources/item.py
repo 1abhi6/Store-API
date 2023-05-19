@@ -22,8 +22,6 @@ class ItemList(MethodView):
         try:
             db.session.add(item)
             db.session.commit()
-        except IntegrityError:
-            abort(400, message="An item with that name already exists.")
         except SQLAlchemyError:
             abort(500, message="An error occurred while inserting the item.")
 
