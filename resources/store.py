@@ -30,7 +30,7 @@ class StoreList(MethodView):
     # Get all stores
     @blp.response(200, StoreSchema(many=True))
     def get(self):
-        return stores.values()
+        return StoreModel.query.all()
 
 
 @blp.route('/store/<string:store_id>')

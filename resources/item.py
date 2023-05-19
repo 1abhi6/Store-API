@@ -3,7 +3,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 
 from db import db
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from models import ItemModel
 from schemas import ItemUpdateSchema, ItemSchema
 
@@ -22,7 +22,9 @@ class ItemList(MethodView):
         try:
             db.session.add(item)
             db.session.commit()
-        except:
+        except IntegrityError:
+            abort(400, message="An item with that name already exists.")
+        except SQLAlchemyError:
             abort(500, message="An error occurred while inserting the item.")
 
         return item, 201
@@ -30,7 +32,7 @@ class ItemList(MethodView):
     # Get all items
     @blp.response(200, ItemSchema(many=True))
     def get(self):
-        return items.values()
+        return ItemModel.query.all()
 
 
 @blp.route('/item/<string:item_id>')
